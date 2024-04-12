@@ -15,7 +15,7 @@ start = "\n" # or "<|endoftext|>" or etc. Can also specify a file, use as: "FILE
 max_new_tokens = 100 # number of tokens generated in each sample
 num_samples = 5 # number of samples to draw
 #temperature = 0.8 # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
-temperature = 1.9 # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
+temperature = .7 # 1.0 = no change, < 1.0 = less random, > 1.0 = more random, in predictions
 top_k = 200 # retain only the top_k most likely tokens, clamp others to have 0 probability
 seed = 1337
 device = 'cuda' # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1', etc.
