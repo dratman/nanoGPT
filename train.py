@@ -21,7 +21,7 @@ import time
 import math
 import pickle
 from contextlib import nullcontext
-
+from datetime import datetime
 import numpy as np
 import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
@@ -282,8 +282,9 @@ while True:
                     'best_val_loss': best_val_loss,
                     'config': config,
                 }
-                print(f"saving checkpoint to {out_dir}")
+                now = datetime.now()
                 print(now.strftime('%Y-%m-%d %H:%M:%S'))
+                print(f"saving checkpoint to {out_dir}")
                 torch.save(checkpoint, os.path.join(out_dir, 'ckpt.pt'))
     if iter_num == 0 and eval_only:
         break
