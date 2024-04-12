@@ -25,8 +25,8 @@ n_embd = 384
 dropout = 0.2
 
 learning_rate = .5e-4
-max_iters = 100000
-lr_decay_iters = 5000 # make equal to max_iters usually
+max_iters = 50000
+lr_decay_iters = 50000 # make equal to max_iters usually
 min_lr = .5e-5 # learning_rate / 10 usually
 beta2 = 0.99 # make a bit bigger because number of tokens per iter is small
 
