@@ -8,7 +8,7 @@ with open('random_multiplication_examples.txt', 'w') as file:
 # Newline serves as both BOS and EOS
     file.write("\n")
     for _ in range(num_facts):
-        # Generate two random integers in the range 0 through 99
+        # Generate two random integers in the range 0 through 999999
         a = random.randint(0, 99)
         b = random.randint(0, 99)
 
