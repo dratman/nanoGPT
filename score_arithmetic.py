@@ -48,7 +48,7 @@ def evaluate_homework():
         if student_answer == correct_answer:
              print(problem, "ok")
         else:
-            print(problem, f"    X The answer is {correct_answer}.")
+            print(problem, f"    X The answer is {correct_answer} (difference is {student_answer-correct_answer})")
 
 # Run the function
 evaluate_homework()
