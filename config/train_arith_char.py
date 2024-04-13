@@ -2,9 +2,9 @@
 # good for debugging and playing on macbooks and such
 
 out_dir = 'out-arith-char'
-eval_interval = 250 # keep frequent because we'll overfit
+eval_interval = 2000
 eval_iters = 200
-log_interval = 20 # don't print too too often
+log_interval = 100 # don't print too too often
 
 # we expect to overfit on this small dataset, so only save when val improves
 always_save_checkpoint = False
@@ -25,7 +25,9 @@ n_embd = 384
 dropout = 0.2
 
 learning_rate = .5e-4
-max_iters = 50000
+#max_iters = 50000 --- this took about 1/2 hour
+# Specify enought iters for 50000 * 40 = 2,000,000 or about 20 hours (if running at that same iters per hour)
+max_iters = 2000000
 lr_decay_iters = 50000 # make equal to max_iters usually
 min_lr = .5e-5 # learning_rate / 10 usually
 beta2 = 0.99 # make a bit bigger because number of tokens per iter is small
