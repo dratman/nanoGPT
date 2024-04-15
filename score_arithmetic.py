@@ -55,7 +55,9 @@ def evaluate_homework():
             print(problem, f"    X The answer is {correct_answer} (difference is {student_answer-correct_answer})")
             wrong_count = wrong_count + 1
 
-    print("Stats: ", ok_count, " ok, ", wrong_count, " wrong.")
+    print("--------------------------")
+    print("Stats: ", ok_count, " right, ", wrong_count, " wrong.")
+    print("--------------------------")
 
 
 # Run the function

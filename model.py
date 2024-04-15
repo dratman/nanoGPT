@@ -99,11 +99,16 @@ class Block(nn.Module):
         self.attn = CausalSelfAttention(config)
         self.ln_2 = LayerNorm(config.n_embd, bias=config.bias)
         self.mlp = MLP(config)
-
-    def forward(self, x):
-        x = x + self.attn(self.ln_1(x))
-        x = x + self.mlp(self.ln_2(x))
+# --------------------------------------------------
+    def forward(self, x, return_embeddings=False):
+        attn_output = self.attn(self.ln_1(x))
+        x = x + attn_output
+        mlp_output = self.mlp(self.ln_2(x))
+        x = x + mlp_output
+        if return_embeddings:
+            return x, attn_output, mlp_output
         return x
+# --------------------------------------------------
 
 @dataclass
 class GPTConfig:
@@ -119,6 +124,7 @@ class GPT(nn.Module):
 
     def __init__(self, config):
         super().__init__()
+        self.config = config
         assert config.vocab_size is not None
         assert config.block_size is not None
         self.config = config
@@ -167,29 +173,33 @@ class GPT(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None):
-        device = idx.device
+ def forward(self, idx, targets=None, return_embeddings=False):
         b, t = idx.size()
-        assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
-        pos = torch.arange(0, t, dtype=torch.long, device=device) # shape (t)
+        assert t <= self.config.block_size, "sequence length can't exceed block size"
 
-        # forward the GPT model itself
-        tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
-        pos_emb = self.transformer.wpe(pos) # position embeddings of shape (t, n_embd)
+        tok_emb = self.transformer.wte(idx)  # Token embeddings
+        pos_emb = self.transformer.wpe(torch.arange(t, device=idx.device))  # Position embeddings
         x = self.transformer.drop(tok_emb + pos_emb)
+
+        embeddings = []
         for block in self.transformer.h:
-            x = block(x)
+            if return_embeddings:
+                x, attn_out, mlp_out = block(x, return_embeddings=True)
+                embeddings.append((attn_out, mlp_out))
+            else:
+                x = block(x)
+
         x = self.transformer.ln_f(x)
 
+        logits = self.lm_head(x)
+        loss = None
         if targets is not None:
             # if we are given some desired targets also calculate the loss
             logits = self.lm_head(x)
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
-        else:
-            # inference-time mini-optimization: only forward the lm_head on the very last position
-            logits = self.lm_head(x[:, [-1], :]) # note: using list [-1] to preserve the time dim
-            loss = None
 
+        if return_embeddings:
+            return logits, loss, embeddings
         return logits, loss
 
     def crop_block_size(self, block_size):
@@ -310,6 +320,18 @@ class GPT(nn.Module):
         Most likely you'll want to make sure to be in model.eval() mode of operation for this.
         """
         for _ in range(max_new_tokens):
+            # ----------------------------------
+            # Code added by ChatGPT 2024-04-14
+            with torch.no_grad():
+                with ctx:
+                    for k in range(num_samples):
+                        logits, _, layer_embeddings = model(x, return_embeddings=True)
+                        y = model.generate_from_logits(logits, max_new_tokens, temperature=temperature, top_k=top_k)
+                        print(decode(y[0].tolist()))
+                        print('---------------')
+            # Now layer_embeddings is a list of tuples, where each tuple contains attention and mlp output embeddings
+            # End code added by ChatGPT 2024-04-14
+            # ----------------------------------
             # if the sequence context is growing too long we must crop it at block_size
             idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]
             # forward the model to get the logits for the index in the sequence
