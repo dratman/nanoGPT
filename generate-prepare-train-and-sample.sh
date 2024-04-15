@@ -4,8 +4,9 @@
 # config file, not an ordinary .py file)
 # Generate training data file as one long text file
 
-cd ~/rdLLMScape/nanoGPT
-python data/arith_char/generate_multiplication_facts.py
+# begin in nanoGPT
+
+python generate_multiplication_facts.py
 
 # Copy generated training data file to data/xxx_char/input.txt
 # (where xxx = arith, shakespeare, etc.)
@@ -16,7 +17,8 @@ cd data/arith_char
 
 python prepare.py
 
-cd ~/rdLLMScape/nanoGPT
+cd ../..
 
 python train.py config/train_arith_char.py
+
 python sample.py --out_dir=out-arith-char
