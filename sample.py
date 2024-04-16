@@ -88,7 +88,9 @@ with torch.no_grad():
     with ctx:
         for k in range(num_samples):
             logits, _, layer_embeddings = model(x, return_embeddings=True)
+
             y = model.generate_from_logits(logits, max_new_tokens, temperature=temperature, top_k=top_k)
+
             print(decode(y[0].tolist()))
             print('---------------')
             # Now layer_embeddings is a list of tuples, where each tuple contains attention and mlp output embeddings
