@@ -1,17 +1,15 @@
-# train a miniature character-level shakespeare model
-# good for debugging and playing on macbooks and such
+# Train a character-level multiplication-example model
 
-out_dir = 'out-arith-char'
+out_dir = 'out_arith_999x9999'
 eval_interval = 2000
 eval_iters = 200
 log_interval = 100 # don't print too too often
 
-# we expect to overfit on this small dataset, so only save when val improves
-always_save_checkpoint = False
+always_save_checkpoint = True
 
 wandb_log = False # override via command line if you like
-wandb_project = 'shakespeare-char'
-wandb_run_name = 'mini-gpt'
+wandb_project = 'multiplication-char'
+wandb_run_name = 'multiplication-mini-gpt'
 
 dataset = 'arith_char'
 gradient_accumulation_steps = 1
@@ -25,15 +23,9 @@ n_embd = 384
 dropout = 0.2
 
 learning_rate = .5e-4
-#max_iters = 50000 --- this took about 1/2 hour
-# Specify enought iters for 50000 * 40 = 2,000,000 or about 20 hours (if running at that same iters per hour)
-max_iters = 8000000
-lr_decay_iters = 50000 # make equal to max_iters usually
+max_iters = 8e6
+lr_decay_iters = 8000000 # make equal to max_iters usually
 min_lr = .5e-5 # learning_rate / 10 usually
 beta2 = 0.99 # make a bit bigger because number of tokens per iter is small
 
 warmup_iters = 100 # not super necessary potentially
-
-# on macbook also add
-# device = 'cpu'  # run on cpu only
-# compile = False # do not torch compile the model
