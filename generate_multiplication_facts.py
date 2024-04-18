@@ -13,7 +13,7 @@ with open('random_multiplication_examples.txt', 'w') as file:
         # Generate two random integers in the range 0 through 9999 (10^4 possibilities from each integer)
         # Thus there are 10^8 different facts possible.
         # Generating 10^6 facts means that only about 1 in 100 will appear in the results.
-        a = random.randint(0, 9999)
+        a = random.randint(0, 999)
         b = random.randint(0, 9999)
 
         # Write the multiplication fact to the file followed by a newline
