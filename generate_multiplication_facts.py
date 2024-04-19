@@ -19,4 +19,3 @@ with open('random_multiplication_examples.txt', 'w') as file:
         # Write the multiplication fact to the file followed by a newline
         file.write(f" {a}*{b}={a*b} \n")
 
-    file.write("done")

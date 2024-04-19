@@ -19,6 +19,6 @@ python prepare.py
 
 cd ../..
 
-#python train.py config/train_arith_char.py
+python train.py config/train_arith_char.py
 
-#python sample.py --out_dir=out-arith-char
+python sample.py --out_dir=out-arith-char
