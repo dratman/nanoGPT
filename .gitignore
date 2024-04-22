@@ -1,0 +1,12 @@
+# Ignore all log files
+*.log
+
+# Ignore build output directory
+out/
+
+# Ignore Python byte-compiled files
+*.pyc
+
+# Ignore temporary files
+temp/
+
