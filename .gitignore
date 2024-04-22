@@ -16,4 +16,5 @@ stories15M.bin
 out/*.pt
 out/*.bin
 out
+data/*
 
