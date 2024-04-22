@@ -10,3 +10,10 @@ out/
 # Ignore temporary files
 temp/
 
+run
+runq
+stories15M.bin
+out/*.pt
+out/*.bin
+out
+
